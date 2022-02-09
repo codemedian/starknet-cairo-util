@@ -1,0 +1,33 @@
+{
+  "name": "sample",
+  "version": "1.0.0",
+  "description": "Initial private repo for ",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "compile": "yarn hardhat starknet-compile contracts/open_zeppelin/token/ERC20_Mintable.cairo contracts/open_zeppelin/Account.cairo",
+    "test": "yarn compile && yarn hardhat test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",  
+  "devDependencies": {    
+    "@nomiclabs/hardhat-waffle": "^2.0.2",    
+    "@shardlabs/starknet-hardhat-plugin": "^0.3.11",
+    "@toruslabs/starkware-crypto": "^1.0.0",
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^9.1.0",
+    "chai": "^4.3.4",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.5.3",
+    "hardhat": "^2.8.3",
+    "hardhat-ethernal": "^0.3.12",
+    "husky": "^4.2.5",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "starknet": "^2.5.1"
+  }
+}
