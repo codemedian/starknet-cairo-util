@@ -12,7 +12,3 @@ async def test_invoke ():
     print(f'> invoke::find_ride() returns: {ret.result}')
     assert ret.result.found_ride == 3
 
-    ret = await contract.get_ride().call()
-    print(f'> invoke::get_ride() returns: {ret.result}')
-    assert ret.result.found_ride == 3
-

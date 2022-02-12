@@ -14,9 +14,7 @@ end
 func sv_found_idx() -> (val: felt):
 end
 
-func _dummy_foreach {
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    } (callback, current: felt, count: felt) -> (res: felt):
+func _dummy_foreach{syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(callback, current: felt, count: felt) -> (res: felt):
 
     if count == 0:
         return (-1)
@@ -45,9 +43,7 @@ func _dummy_foreach {
     return _dummy_foreach(callback, current+1, count-1)
 end
 
-func dummy_foreach {
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    }  (callback) -> (res: felt):
+func dummy_foreach {syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(callback) -> (res: felt):
     return _dummy_foreach(callback, 0, 10)
 end
 
@@ -55,9 +51,7 @@ end
 # This funciton is called for every element in the iterated list
 # @retval 1 = iteration stops and current index is returned to the caller
 # @retval 0 = iteration continues
-func loop_handler {
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    } (ride_idx: felt, myStruct: SomeStruct) -> (res: felt):
+func loop_handler {syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}(ride_idx: felt, myStruct: SomeStruct) -> (res: felt):
     # 3rd element in iteration will have this value
     if myStruct.b == 9:
         sv_found_idx.write(ride_idx)
@@ -69,22 +63,13 @@ func loop_handler {
 end
 
 @view
-func find_ride {
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    } () -> (found_ride : felt):
+func find_ride {syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr}() -> (found_ride : felt):
 
     let (cb) = get_label_location(loop_handler)
 
-    let (found_ride) = dummy_foreach(cb)
+    dummy_foreach(cb)
 
+    let (found_ride) = sv_found_idx.read()
     return (found_ride)
 end
 
-@view
-func get_ride {
-        syscall_ptr : felt*, pedersen_ptr : HashBuiltin*, range_check_ptr
-    } () -> (found_ride : felt):
-
-    let (r: felt) = sv_found_idx.read()
-    return (r)
-end
