@@ -3,7 +3,6 @@
 from starkware.cairo.common.registers import get_label_location
 from starkware.cairo.common.cairo_builtins import HashBuiltin
 from starkware.cairo.common.alloc import alloc
-from starkware.cairo.common.invoke import invoke
 from starkware.cairo.common.uint256 import (Uint256, uint256_lt, uint256_add, uint256_eq)
 
 struct SomeStruct:
@@ -23,13 +22,21 @@ func _dummy_foreach {
         return (-1)
     end
 
-    let (cb_args : felt*) = alloc()
-    assert [cb_args] = current
-    assert [cb_args+1] = 10
-    assert [cb_args+2] = 0
-    assert [cb_args+3] = current * 3
+    [ap] = syscall_ptr; ap++
+    [ap] = pedersen_ptr; ap++
+    [ap] = range_check_ptr; ap++
+    [ap] = current; ap++
+    [ap] = 10; ap++
+    [ap] = 0; ap++
+    [ap] = current*3; ap++
 
-    let r: felt = invoke(callback, 4, cb_args)
+
+    call abs callback
+
+    let syscall_ptr = cast([ap-4], felt*)
+    let pedersen_ptr = cast([ap-3], HashBuiltin*)
+    let range_check_ptr = [ap-2]
+    let r = [ap-1]
 
     if r == 1:
         return (current)
@@ -53,8 +60,7 @@ func loop_handler {
     } (ride_idx: felt, myStruct: SomeStruct) -> (res: felt):
     # 3rd element in iteration will have this value
     if myStruct.b == 9:
-        #TODO: implicit argument passing doesn't work yet
-#        sv_found_idx.write(ride_idx)  
+        sv_found_idx.write(ride_idx)
         return (1)
     end
 
